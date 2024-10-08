@@ -9087,7 +9087,7 @@
         ],
         "properties": {
           "field_name": {
-            "type": "string"
+            "$ref": "#/components/schemas/SingleOrList_for_JsonPath"
           },
           "field_schema": {
             "anyOf": [
@@ -9100,6 +9100,19 @@
             ]
           }
         }
+      },
+      "SingleOrList_for_JsonPath": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
       },
       "PayloadFieldSchema": {
         "anyOf": [
