@@ -115,6 +115,7 @@ fn test_alias_operation() {
                         quantization_config: None,
                         sharding_method: None,
                         strict_mode_config: None,
+                        comment: None,
                     },
                 )),
                 FULL_ACCESS,
