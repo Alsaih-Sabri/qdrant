@@ -181,6 +181,7 @@ impl PointsInternal for PointsInternalService {
             upsert_points,
             shard_id,
             clock_tag,
+            debug_metadata,
         } = request.into_inner();
 
         let upsert_points =
@@ -190,6 +191,7 @@ impl PointsInternal for PointsInternalService {
             self.toc.clone(),
             upsert_points,
             clock_tag.map(Into::into),
+            debug_metadata.map(Into::into),
             shard_id,
             FULL_ACCESS.clone(),
         )
@@ -206,6 +208,7 @@ impl PointsInternal for PointsInternalService {
             delete_points,
             shard_id,
             clock_tag,
+            debug_metadata,
         } = request.into_inner();
 
         let delete_points =
@@ -215,6 +218,7 @@ impl PointsInternal for PointsInternalService {
             UncheckedTocProvider::new_unchecked(&self.toc),
             delete_points,
             clock_tag.map(Into::into),
+            debug_metadata.map(Into::into),
             shard_id,
             FULL_ACCESS.clone(),
         )
@@ -231,6 +235,7 @@ impl PointsInternal for PointsInternalService {
 
         let shard_id = request.shard_id;
         let clock_tag = request.clock_tag;
+        let debug_metadata = request.debug_metadata.map(Into::into);
 
         let update_point_vectors = request
             .update_vectors
@@ -240,6 +245,7 @@ impl PointsInternal for PointsInternalService {
             self.toc.clone(),
             update_point_vectors,
             clock_tag.map(Into::into),
+            debug_metadata,
             shard_id,
             FULL_ACCESS.clone(),
         )
@@ -256,6 +262,7 @@ impl PointsInternal for PointsInternalService {
 
         let shard_id = request.shard_id;
         let clock_tag = request.clock_tag;
+        let debug_metadata = request.debug_metadata.map(Into::into);
 
         let delete_point_vectors = request
             .delete_vectors
@@ -265,6 +272,7 @@ impl PointsInternal for PointsInternalService {
             UncheckedTocProvider::new_unchecked(&self.toc),
             delete_point_vectors,
             clock_tag.map(Into::into),
+            debug_metadata,
             shard_id,
             FULL_ACCESS.clone(),
         )
@@ -281,6 +289,7 @@ impl PointsInternal for PointsInternalService {
             set_payload_points,
             shard_id,
             clock_tag,
+            debug_metadata,
         } = request.into_inner();
 
         let set_payload_points = set_payload_points
@@ -290,6 +299,7 @@ impl PointsInternal for PointsInternalService {
             UncheckedTocProvider::new_unchecked(&self.toc),
             set_payload_points,
             clock_tag.map(Into::into),
+            debug_metadata.map(Into::into),
             shard_id,
             FULL_ACCESS.clone(),
         )
@@ -306,6 +316,7 @@ impl PointsInternal for PointsInternalService {
             set_payload_points,
             shard_id,
             clock_tag,
+            debug_metadata,
         } = request.into_inner();
 
         let set_payload_points = set_payload_points
@@ -315,6 +326,7 @@ impl PointsInternal for PointsInternalService {
             UncheckedTocProvider::new_unchecked(&self.toc),
             set_payload_points,
             clock_tag.map(Into::into),
+            debug_metadata.map(Into::into),
             shard_id,
             FULL_ACCESS.clone(),
         )
@@ -331,6 +343,7 @@ impl PointsInternal for PointsInternalService {
             delete_payload_points,
             shard_id,
             clock_tag,
+            debug_metadata,
         } = request.into_inner();
 
         let delete_payload_points = delete_payload_points
@@ -340,6 +353,7 @@ impl PointsInternal for PointsInternalService {
             UncheckedTocProvider::new_unchecked(&self.toc),
             delete_payload_points,
             clock_tag.map(Into::into),
+            debug_metadata.map(Into::into),
             shard_id,
             FULL_ACCESS.clone(),
         )
@@ -356,6 +370,7 @@ impl PointsInternal for PointsInternalService {
             clear_payload_points,
             shard_id,
             clock_tag,
+            debug_metadata,
         } = request.into_inner();
 
         let clear_payload_points = clear_payload_points
@@ -365,6 +380,7 @@ impl PointsInternal for PointsInternalService {
             UncheckedTocProvider::new_unchecked(&self.toc),
             clear_payload_points,
             clock_tag.map(Into::into),
+            debug_metadata.map(Into::into),
             shard_id,
             FULL_ACCESS.clone(),
         )
@@ -381,6 +397,7 @@ impl PointsInternal for PointsInternalService {
             create_field_index_collection,
             shard_id,
             clock_tag,
+            debug_metadata,
         } = request.into_inner();
 
         let create_field_index_collection = create_field_index_collection
@@ -390,6 +407,7 @@ impl PointsInternal for PointsInternalService {
             self.toc.clone(),
             create_field_index_collection,
             clock_tag.map(Into::into),
+            debug_metadata.map(Into::into),
             shard_id,
         )
         .await
@@ -405,6 +423,7 @@ impl PointsInternal for PointsInternalService {
             delete_field_index_collection,
             shard_id,
             clock_tag,
+            debug_metadata,
         } = request.into_inner();
 
         let delete_field_index_collection = delete_field_index_collection
@@ -414,6 +433,7 @@ impl PointsInternal for PointsInternalService {
             self.toc.clone(),
             delete_field_index_collection,
             clock_tag.map(Into::into),
+            debug_metadata.map(Into::into),
             shard_id,
         )
         .await
@@ -575,14 +595,17 @@ impl PointsInternal for PointsInternalService {
             sync_points,
             shard_id,
             clock_tag,
+            debug_metadata,
         } = request.into_inner();
 
         let sync_points =
             sync_points.ok_or_else(|| Status::invalid_argument("SyncPoints is missing"))?;
+
         sync(
             self.toc.clone(),
             sync_points,
             clock_tag.map(Into::into),
+            debug_metadata.map(Into::into),
             shard_id,
             FULL_ACCESS.clone(),
         )

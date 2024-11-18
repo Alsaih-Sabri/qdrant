@@ -31,7 +31,8 @@ use collection::operations::verification::{
     new_unchecked_verification_pass, StrictModeVerification,
 };
 use collection::operations::{
-    ClockTag, CollectionUpdateOperations, CreateIndex, FieldIndexOperations, OperationWithClockTag,
+    ClockTag, CollectionUpdateOperations, CreateIndex, DebugMetadata, FieldIndexOperations,
+    OperationWithClockTag,
 };
 use collection::shards::shard::ShardId;
 use common::counter::hardware_accumulator::HwMeasurementAcc;
@@ -229,6 +230,7 @@ pub async fn do_upsert_points(
     collection_name: String,
     operation: PointInsertOperations,
     clock_tag: Option<ClockTag>,
+    debug_metadata: Option<DebugMetadata>,
     shard_selection: Option<ShardId>,
     wait: bool,
     ordering: WriteOrdering,
@@ -254,7 +256,8 @@ pub async fn do_upsert_points(
 
     toc.update(
         &collection_name,
-        OperationWithClockTag::new(collection_operation, clock_tag),
+        OperationWithClockTag::new(collection_operation, clock_tag)
+            .with_debug_metadata(debug_metadata),
         wait,
         ordering,
         shard_selector,
@@ -269,6 +272,7 @@ pub async fn do_delete_points(
     collection_name: String,
     points: PointsSelector,
     clock_tag: Option<ClockTag>,
+    debug_metadata: Option<DebugMetadata>,
     shard_selection: Option<ShardId>,
     wait: bool,
     ordering: WriteOrdering,
@@ -287,7 +291,8 @@ pub async fn do_delete_points(
 
     toc.update(
         &collection_name,
-        OperationWithClockTag::new(collection_operation, clock_tag),
+        OperationWithClockTag::new(collection_operation, clock_tag)
+            .with_debug_metadata(debug_metadata),
         wait,
         ordering,
         shard_selector,
@@ -302,6 +307,7 @@ pub async fn do_update_vectors(
     collection_name: String,
     operation: UpdateVectors,
     clock_tag: Option<ClockTag>,
+    debug_metadata: Option<DebugMetadata>,
     shard_selection: Option<ShardId>,
     wait: bool,
     ordering: WriteOrdering,
@@ -321,7 +327,8 @@ pub async fn do_update_vectors(
 
     toc.update(
         &collection_name,
-        OperationWithClockTag::new(collection_operation, clock_tag),
+        OperationWithClockTag::new(collection_operation, clock_tag)
+            .with_debug_metadata(debug_metadata),
         wait,
         ordering,
         shard_selector,
@@ -336,6 +343,7 @@ pub async fn do_delete_vectors(
     collection_name: String,
     operation: DeleteVectors,
     clock_tag: Option<ClockTag>,
+    debug_metadata: Option<DebugMetadata>,
     shard_selection: Option<ShardId>,
     wait: bool,
     ordering: WriteOrdering,
@@ -364,7 +372,8 @@ pub async fn do_delete_vectors(
         result = Some(
             toc.update(
                 &collection_name,
-                OperationWithClockTag::new(collection_operation, clock_tag),
+                OperationWithClockTag::new(collection_operation, clock_tag)
+                    .with_debug_metadata(debug_metadata),
                 wait,
                 ordering,
                 shard_selector.clone(),
@@ -399,6 +408,7 @@ pub async fn do_set_payload(
     collection_name: String,
     operation: SetPayload,
     clock_tag: Option<ClockTag>,
+    debug_metadata: Option<DebugMetadata>,
     shard_selection: Option<ShardId>,
     wait: bool,
     ordering: WriteOrdering,
@@ -424,7 +434,8 @@ pub async fn do_set_payload(
 
     toc.update(
         &collection_name,
-        OperationWithClockTag::new(collection_operation, clock_tag),
+        OperationWithClockTag::new(collection_operation, clock_tag)
+            .with_debug_metadata(debug_metadata),
         wait,
         ordering,
         shard_selector,
@@ -439,6 +450,7 @@ pub async fn do_overwrite_payload(
     collection_name: String,
     operation: SetPayload,
     clock_tag: Option<ClockTag>,
+    debug_metadata: Option<DebugMetadata>,
     shard_selection: Option<ShardId>,
     wait: bool,
     ordering: WriteOrdering,
@@ -465,7 +477,8 @@ pub async fn do_overwrite_payload(
 
     toc.update(
         &collection_name,
-        OperationWithClockTag::new(collection_operation, clock_tag),
+        OperationWithClockTag::new(collection_operation, clock_tag)
+            .with_debug_metadata(debug_metadata),
         wait,
         ordering,
         shard_selector,
@@ -480,6 +493,7 @@ pub async fn do_delete_payload(
     collection_name: String,
     operation: DeletePayload,
     clock_tag: Option<ClockTag>,
+    debug_metadata: Option<DebugMetadata>,
     shard_selection: Option<ShardId>,
     wait: bool,
     ordering: WriteOrdering,
@@ -503,7 +517,8 @@ pub async fn do_delete_payload(
 
     toc.update(
         &collection_name,
-        OperationWithClockTag::new(collection_operation, clock_tag),
+        OperationWithClockTag::new(collection_operation, clock_tag)
+            .with_debug_metadata(debug_metadata),
         wait,
         ordering,
         shard_selector,
@@ -518,6 +533,7 @@ pub async fn do_clear_payload(
     collection_name: String,
     points: PointsSelector,
     clock_tag: Option<ClockTag>,
+    debug_metadata: Option<DebugMetadata>,
     shard_selection: Option<ShardId>,
     wait: bool,
     ordering: WriteOrdering,
@@ -538,7 +554,8 @@ pub async fn do_clear_payload(
 
     toc.update(
         &collection_name,
-        OperationWithClockTag::new(collection_operation, clock_tag),
+        OperationWithClockTag::new(collection_operation, clock_tag)
+            .with_debug_metadata(debug_metadata),
         wait,
         ordering,
         shard_selector,
@@ -553,6 +570,7 @@ pub async fn do_batch_update_points(
     collection_name: String,
     operations: Vec<UpdateOperation>,
     clock_tag: Option<ClockTag>,
+    debug_metadata: Option<DebugMetadata>,
     shard_selection: Option<ShardId>,
     wait: bool,
     ordering: WriteOrdering,
@@ -567,6 +585,7 @@ pub async fn do_batch_update_points(
                     collection_name.clone(),
                     operation.upsert,
                     clock_tag,
+                    debug_metadata,
                     shard_selection,
                     wait,
                     ordering,
@@ -580,6 +599,7 @@ pub async fn do_batch_update_points(
                     collection_name.clone(),
                     operation.delete,
                     clock_tag,
+                    debug_metadata,
                     shard_selection,
                     wait,
                     ordering,
@@ -593,6 +613,7 @@ pub async fn do_batch_update_points(
                     collection_name.clone(),
                     operation.set_payload,
                     clock_tag,
+                    debug_metadata,
                     shard_selection,
                     wait,
                     ordering,
@@ -606,6 +627,7 @@ pub async fn do_batch_update_points(
                     collection_name.clone(),
                     operation.overwrite_payload,
                     clock_tag,
+                    debug_metadata,
                     shard_selection,
                     wait,
                     ordering,
@@ -619,6 +641,7 @@ pub async fn do_batch_update_points(
                     collection_name.clone(),
                     operation.delete_payload,
                     clock_tag,
+                    debug_metadata,
                     shard_selection,
                     wait,
                     ordering,
@@ -632,6 +655,7 @@ pub async fn do_batch_update_points(
                     collection_name.clone(),
                     operation.clear_payload,
                     clock_tag,
+                    debug_metadata,
                     shard_selection,
                     wait,
                     ordering,
@@ -645,6 +669,7 @@ pub async fn do_batch_update_points(
                     collection_name.clone(),
                     operation.update_vectors,
                     clock_tag,
+                    debug_metadata,
                     shard_selection,
                     wait,
                     ordering,
@@ -658,6 +683,7 @@ pub async fn do_batch_update_points(
                     collection_name.clone(),
                     operation.delete_vectors,
                     clock_tag,
+                    debug_metadata,
                     shard_selection,
                     wait,
                     ordering,
@@ -678,6 +704,7 @@ pub async fn do_create_index_internal(
     field_name: PayloadKeyType,
     field_schema: Option<PayloadFieldSchema>,
     clock_tag: Option<ClockTag>,
+    debug_metadata: Option<DebugMetadata>,
     shard_selection: Option<ShardId>,
     wait: bool,
     ordering: WriteOrdering,
@@ -697,7 +724,8 @@ pub async fn do_create_index_internal(
 
     toc.update(
         &collection_name,
-        OperationWithClockTag::new(collection_operation, clock_tag),
+        OperationWithClockTag::new(collection_operation, clock_tag)
+            .with_debug_metadata(debug_metadata),
         wait,
         ordering,
         shard_selector,
@@ -712,6 +740,7 @@ pub async fn do_create_index(
     collection_name: String,
     operation: CreateFieldIndex,
     clock_tag: Option<ClockTag>,
+    debug_metadata: Option<DebugMetadata>,
     shard_selection: Option<ShardId>,
     wait: bool,
     ordering: WriteOrdering,
@@ -754,6 +783,7 @@ pub async fn do_create_index(
         operation.field_name,
         Some(field_schema),
         clock_tag,
+        debug_metadata,
         shard_selection,
         wait,
         ordering,
@@ -767,6 +797,7 @@ pub async fn do_delete_index_internal(
     collection_name: String,
     index_name: JsonPath,
     clock_tag: Option<ClockTag>,
+    debug_metadata: Option<DebugMetadata>,
     shard_selection: Option<ShardId>,
     wait: bool,
     ordering: WriteOrdering,
@@ -783,7 +814,8 @@ pub async fn do_delete_index_internal(
 
     toc.update(
         &collection_name,
-        OperationWithClockTag::new(collection_operation, clock_tag),
+        OperationWithClockTag::new(collection_operation, clock_tag)
+            .with_debug_metadata(debug_metadata),
         wait,
         ordering,
         shard_selector,
@@ -798,6 +830,7 @@ pub async fn do_delete_index(
     collection_name: String,
     index_name: JsonPath,
     clock_tag: Option<ClockTag>,
+    debug_metadata: Option<DebugMetadata>,
     shard_selection: Option<ShardId>,
     wait: bool,
     ordering: WriteOrdering,
@@ -828,6 +861,7 @@ pub async fn do_delete_index(
         collection_name,
         index_name,
         clock_tag,
+        debug_metadata,
         shard_selection,
         wait,
         ordering,
