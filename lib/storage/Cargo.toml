@@ -29,7 +29,7 @@ schemars = { workspace = true }
 itertools = { workspace = true }
 log = { workspace = true }
 tonic = { workspace = true }
-http = "0.2"
+http = "1.0"
 parking_lot = { workspace = true }
 strum = { workspace = true }
 tap = { workspace = true }
